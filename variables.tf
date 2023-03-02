@@ -18,52 +18,52 @@ variable "location" {
 }
 
 //public_ip
-variable "public_ip_name" {
-  description = " Specifies the name of the Public IP."
+variable "lb_public_ip_name" {
+  description = "The name of the front facing public ip"
   type        = string
 }
 
 variable "ip_version" {
-  description = "The IP Version to use, IPv6 or IPv4."
+  description = "The IP Version to use, IPv6 or IPv4. Changing this forces a new resource to be created."
   type        = string
 }
 
 variable "public_ip_sku" {
-  description = "The SKU of the Public IP."
+  description = " The SKU of the Public IP. Accepted values are Basic and Standard. Defaults to Basic"
   type        = string
 }
 
 variable "public_ip_sku_tier" {
-  description = "The SKU Tier that should be used for the Public IP."
+  description = " The SKU Tier that should be used for the Public IP. Possible values are Regional and Global. Defaults to Regional"
   type        = string
 
 }
 
 variable "allocation_method" {
-  description = "Defines the allocation method for this IP address. "
+  description = "Defines the allocation method for this IP address. Possible values are Static or Dynamic"
   type        = string
 }
 
 //load_balancer 
-variable "name" {
+variable "lb_name" {
   description = " Specifies the name of the Load Balancer."
   type        = string
 }
 
-variable "sku" {
-  description = " The SKU of the Azure Load Balancer."
+variable "lb_sku" {
+  description = " The SKU of the Azure Load Balancer. Accepted values are Basic, Standard and Gateway. Defaults to Basic"
   type        = string
 }
 
-variable "sku_tier" {
-  description = "The SKU tier of this Load Balancer. "
+variable "lb_sku_tier" {
+  description = " The SKU tier of this Load Balancer. Possible values are Global and Regional. Defaults to Regional."
   type        = string
 }
 
-variable "ip_name" {
-  description = "Specifies the name of the frontend IP configuration."
-  type        = string
-}
+# variable "ip_name" {
+#   description = "Specifies the name of the frontend IP configuration."
+#   type        = string
+# }
 
 //backend_address_pool
 
@@ -75,28 +75,28 @@ variable "backend_name" {
 
 //lb_rule
 
-variable "rule_name" {
+variable "lb_rule_name" {
   description = "Specifies the name of the LB Rule."
   type        = string
 }
 
 variable "protocol" {
-  description = "The transport protocol for the external endpoint."
+  description = "The transport protocol for the external endpoint. Possible values are Tcp, Udp or All."
   type        = string
 }
 
 variable "frontend_port" {
-  description = "The port for the external endpoint. "
+  description = "The port for the external endpoint. Port numbers for each Rule must be unique within the Load Balancer. Possible values range between 0 and 65534, inclusive. "
   type        = number
 }
 
 variable "backend_port" {
-  description = "The port used for internal connections on the endpoint. "
+  description = "The port used for internal connections on the endpoint. Possible values range between 0 and 65535, inclusive. "
   type        = number
 }
 
 variable "idle_timeout_in_minutes" {
-  description = "Specifies the idle timeout in minutes for TCP connections. "
+  description = " Specifies the idle timeout in minutes for TCP connections. Valid values are between 4 and 30 minutes. Defaults to 4 minute"
   type        = number
 }
 
@@ -106,10 +106,11 @@ variable "enable_tcp_reset" {
 }
 
 variable "enable_floating_ip" {
-  description = "Are the Floating IPs enabled for this Load Balncer Rule? "
+  description = "Are the Floating IPs enabled for this Load Balncer Rule? A floating IP is reassigned to a secondary server in case the primary server fails. Required to configure a SQL AlwaysOn Availability Group. Defaults to false."
   type        = bool
 }
 
+# SQL
 
 variable "vnet_resource_group_name" {
   type        = string
@@ -133,27 +134,27 @@ variable "subnet_id" {
 
 variable "administrator_login" {
   type        = string
-  description = "(optional) describe your variable"
+  description = "The Administrator login for the MySQL Server. Required when create_mode is Default."
 }
 
 variable "sku_name" {
   type        = string
-  description = "(optional) describe your variable"
+  description = "Specifies the SKU Name for this MySQL Server. The name of the SKU, follows the tier + family + cores pattern (e.g. B_Gen4_1, GP_Gen5_8). For more information see the product documentation. Possible values are B_Gen4_1, B_Gen4_2, B_Gen5_1, B_Gen5_2, GP_Gen4_2, GP_Gen4_4, GP_Gen4_8, GP_Gen4_16, GP_Gen4_32, GP_Gen5_2, GP_Gen5_4, GP_Gen5_8, GP_Gen5_16, GP_Gen5_32, GP_Gen5_64, MO_Gen5_2, MO_Gen5_4, MO_Gen5_8, MO_Gen5_16 and MO_Gen5_32."
 }
 
 variable "storage_mb" {
   type        = number
-  description = "(optional) describe your variable"
+  description = "Max storage allowed for a server. Possible values are between 5120 MB(5GB) and 1048576 MB(1TB) for the Basic SKU and between 5120 MB(5GB) and 16777216 MB(16TB) for General Purpose/Memory Optimized SKUs"
 }
 
 variable "mysql_version" {
   type        = string
-  description = "(optional) describe your variable"
+  description = "Specifies the version of MySQL to use. Valid values are 5.7, or 8.0"
 }
 
 variable "auto_grow_enabled" {
   type        = bool
-  description = "Enable/Disable auto-growing of the storage. Storage auto-grow prevents your server from running out of storage and becoming read-only"
+  description = " Enable/Disable auto-growing of the storage. Storage auto-grow prevents your server from running out of storage and becoming read-only. If storage auto grow is enabled, the storage automatically grows without impacting the workload. The default value if not explicitly specified is true"
   default     = true
 }
 
@@ -194,22 +195,13 @@ variable "ssl_minimal_tls_version_enforced" {
 }
 
 
+# redis
 
 variable "redis_name" {
   description = "The name of the Redis instance."
   type        = string
 
 }
-# variable "location" {
-#   description = "The location of the resource group."
-#   type        = string
-
-# }
-# variable "resource_group_name" {
-#   description = "The name of the Resource group"
-#   type        = string
-
-# }
 variable "capacity" {
     description = "The size of the Redis cache to deploy. Valid values for a SKU family of C (Basic/Standard) are 0, 1, 2, 3, 4, 5, 6, and for P (Premium) family are 1, 2, 3, 4, 5"
     type= string  
@@ -239,10 +231,6 @@ variable "redis_version" {
   type        = string
 
 }
-# variable "zones" {
-#   description = " Specifies a list of Availability Zones in which this Redis Cache should be located."
-
-# }
 variable "identity" {
     description = "region of deployment"
     type= string  
@@ -269,16 +257,6 @@ variable "aks_name" {
   description = "The cluster name for the AKS resources created in the specified Azure Resource Group."
   type        = string
 }
-
-# variable "resource_group_name" {
-#   description = "The resource group name to be imported"
-#   type        = string
-# }
-
-# variable "location" {
-#   description = "The Azure region in which all resources in this example should be provisioned."
-#   type        = string
-# }
 
 variable "dns_prefix" {
   description = "(The prefix for the resources created in the specified Azure Resource Group"
@@ -341,5 +319,5 @@ variable "secondary_max_pods" {
 }
 variable "os_sku" {
   type        = string
-  description = "disk type in a nodes"
+  description = "Node OS SKU"
 }

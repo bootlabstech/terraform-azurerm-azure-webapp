@@ -1,5 +1,5 @@
 resource "azurerm_public_ip" "public_ip" {
-  name                = var.public_ip_name
+  name                = var.lb_public_ip_name
   resource_group_name = var.resource_group_name
   location            = var.location
   ip_version          = var.ip_version
@@ -9,31 +9,15 @@ resource "azurerm_public_ip" "public_ip" {
   
 }
 
-# resource "azurerm_network_interface" "nic" {
-#   name                = var.nic_name
-#   location            = var.location
-#   resource_group_name = var.resource_group_name
-
-#   ip_configuration {
-#     name                          = var.ip_configuration_name
-#     subnet_id                     = var.subnet_name
-#     private_ip_address_allocation = var.private_ip_address_allocation
-
-#   }
-
-# }
-
 resource "azurerm_lb" "loadbalancer" {
 
-  name                = var.name
+  name                = var.lb_name
   resource_group_name = var.resource_group_name
   location            = var.location
-  sku                 = var.sku
-  sku_tier            = var.sku_tier
+  sku                 = var.lb_sku
+  sku_tier            = var.lb_sku_tier
   frontend_ip_configuration {
-    name                 = var.ip_name
-    # private_ip_address =  azurerm_network_interface.nic.private_ip_address
-    # subnet_id = var.subnet_name
+    name                 = azurerm_public_ip.public_ip.name
     public_ip_address_id = azurerm_public_ip.public_ip.id
 
   }
@@ -46,7 +30,7 @@ resource "azurerm_lb_backend_address_pool" "backend_address_pool" {
 }
 
 resource "azurerm_lb_rule" "lb_rule" {
-  name                           = var.rule_name
+  name                           = var.lb_rule_name
   loadbalancer_id                = azurerm_lb.loadbalancer.id
   frontend_ip_configuration_name = var.ip_name
   backend_address_pool_ids       = [azurerm_lb_backend_address_pool.backend_address_pool.id]
@@ -59,8 +43,7 @@ resource "azurerm_lb_rule" "lb_rule" {
 
 }
 
-
-
+#Creating SQL server
 
 terraform {
   experiments = [module_variable_optional_attrs]
@@ -126,7 +109,7 @@ data "azurerm_virtual_network" "vnet_data" {
   resource_group_name = var.vnet_resource_group_name
 }
 
-
+# Creating Redis
 resource "azurerm_redis_cache" "azurerm_redis_cache" {
   name                = var.redis_name
   location            = var.location
@@ -137,7 +120,6 @@ resource "azurerm_redis_cache" "azurerm_redis_cache" {
   enable_non_ssl_port = false
   public_network_access_enabled = var.redis_public_network_access_enabled
   redis_version = var.redis_version
-  # zones  = var.zones
 
   redis_configuration {
   }
@@ -155,6 +137,8 @@ resource "azurerm_redis_cache" "azurerm_redis_cache" {
     }
   }
 }
+
+# CLuster Creation
 
 resource "azurerm_kubernetes_cluster" "cluster" {
   name                          = var.aks_name
