@@ -32,7 +32,7 @@ resource "azurerm_lb_backend_address_pool" "backend_address_pool" {
 resource "azurerm_lb_rule" "lb_rule" {
   name                           = var.lb_rule_name
   loadbalancer_id                = azurerm_lb.loadbalancer.id
-  frontend_ip_configuration_name = var.ip_name
+  frontend_ip_configuration_name = azurerm_public_ip.public_ip.name
   backend_address_pool_ids       = [azurerm_lb_backend_address_pool.backend_address_pool.id]
   protocol                       = var.protocol
   frontend_port                  = var.frontend_port
