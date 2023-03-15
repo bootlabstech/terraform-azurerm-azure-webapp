@@ -1,10 +1,12 @@
 variable "rglock_name" {
   type        = string
   description = "Specifies the name of the Management Lock"
+  default = "RGLock"
 }
 variable "lock_level" {
   type        = string
   description = "Specifies the Level to be used for this Lock"
+  default = "RGLock"
 }
 //resource_group
 variable "resource_group_name" {
@@ -26,11 +28,13 @@ variable "lb_public_ip_name" {
 variable "ip_version" {
   description = "The IP Version to use, IPv6 or IPv4. Changing this forces a new resource to be created."
   type        = string
+  default = "IPv4"
 }
 
 variable "public_ip_sku" {
   description = " The SKU of the Public IP. Accepted values are Basic and Standard. Defaults to Basic"
   type        = string
+  default = "Standard"
 }
 
 variable "public_ip_sku_tier" {
@@ -42,6 +46,7 @@ variable "public_ip_sku_tier" {
 variable "allocation_method" {
   description = "Defines the allocation method for this IP address. Possible values are Static or Dynamic"
   type        = string
+  default = "Static"
 }
 
 //load_balancer 
@@ -53,6 +58,7 @@ variable "lb_name" {
 variable "lb_sku" {
   description = " The SKU of the Azure Load Balancer. Accepted values are Basic, Standard and Gateway. Defaults to Basic"
   type        = string
+  default = "Standard"
 }
 
 variable "lb_sku_tier" {
@@ -78,6 +84,7 @@ variable "backend_name" {
 variable "lb_rule_name" {
   description = "Specifies the name of the LB Rule."
   type        = string
+  default = "LoadbalancerRule"
 }
 
 variable "protocol" {
@@ -98,16 +105,19 @@ variable "backend_port" {
 variable "idle_timeout_in_minutes" {
   description = " Specifies the idle timeout in minutes for TCP connections. Valid values are between 4 and 30 minutes. Defaults to 4 minute"
   type        = number
+  default = 4
 }
 
 variable "enable_tcp_reset" {
   description = "Is TCP Reset enabled for this Load Balancer Rule?"
   type        = bool
+  default = false
 }
 
 variable "enable_floating_ip" {
   description = "Are the Floating IPs enabled for this Load Balncer Rule? A floating IP is reassigned to a secondary server in case the primary server fails. Required to configure a SQL AlwaysOn Availability Group. Defaults to false."
   type        = bool
+  default = false
 }
 
 # SQL
@@ -219,11 +229,13 @@ variable "redis_sku_name" {
 variable "enable_non_ssl_port" {
   description = "Enable the non-SSL port (6379) - disabled by default."
   type = bool
+  default = true
 
 }
 variable "redis_public_network_access_enabled" {
     description = "Whether or not public network access is allowed for this Redis Cache."
     type= bool
+    default = false
 }
 
 variable "redis_version" {
@@ -240,6 +252,7 @@ variable "identity" {
 variable "type" {
     description = "Specifies the type of Managed Service Identity that should be configured on this Redis Cluster. Possible values are SystemAssigned, UserAssigned, SystemAssigned, UserAssigned"
     type= string  
+    default = "SystemAssigned"
 }
 variable "patch_schedule" {
     description = "region of deployment"
@@ -249,6 +262,7 @@ variable "patch_schedule" {
 variable "day_of_week" {
     description = " the Weekday name - possible values include"
     type= string  
+    default = "Wednesday"
 }
 
 
@@ -261,6 +275,7 @@ variable "aks_name" {
 variable "dns_prefix" {
   description = "(The prefix for the resources created in the specified Azure Resource Group"
   type        = string
+  default = "AKSwebapp"
 }
 
 
